@@ -13,6 +13,7 @@ enum LayoutType: Int, CaseIterable {
     case fullWidth
     case banner
     case grid
+    case bottomGrid
     case horizontalList
 }
 
@@ -35,6 +36,7 @@ class CompositionLayoutView: UIView {
 
     private var components: [ComponentWithLayout] = [.init(layout: .fullWidth, component: Component.build(number: 1)),
                                                      .init(layout: .grid, component: Component.build(number: 5)),
+                                                     .init(layout: .bottomGrid, component: Component.build(number: 4)),
                                                      .init(layout: .banner, component: Component.build(number: 10)),
                                                      .init(layout: .horizontalList, component: Component.build(number: 3)),
                                                      .init(layout: .horizontalList, component: Component.build(number: 4)),
@@ -88,19 +90,32 @@ private extension CompositionLayoutView {
             switch  self.components[sectionNumber].layout {
             case .fullWidth:
                 let section = self.makeFullWidth()
-                section.contentInsets.bottom = 10
+                section.contentInsets.bottom = 16
+                section.contentInsets.leading = 20
+                section.contentInsets.trailing = 20
                 return section
             case .banner:
                 let section = self.makeBanner()
-                section.contentInsets.bottom = 10
+                section.contentInsets.bottom = 16
+                section.contentInsets.leading = 20
+                section.contentInsets.trailing = 20
                 return section
             case .grid:
                 let section = self.makeGrid(with: sectionNumber)
+                section.contentInsets.leading = 20
+                section.contentInsets.trailing = 20
+                return section
+            case .bottomGrid:
+                let section = self.makeBottomGrid()
                 section.contentInsets.bottom = 10
+                section.contentInsets.leading = 20
+                section.contentInsets.trailing = 20
                 return section
             case .horizontalList:
                 let section = self.makeHorizontalList()
-                section.contentInsets.bottom = 10
+                section.contentInsets.bottom = 16
+                section.contentInsets.leading = 20
+                section.contentInsets.trailing = 20
                 return section
             }
         }
@@ -108,7 +123,7 @@ private extension CompositionLayoutView {
     
     func makeFullWidth() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                              heightDimension: .estimated(1))
+                                              heightDimension: .absolute(56))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
@@ -124,43 +139,43 @@ private extension CompositionLayoutView {
     
     func makeBanner() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                              heightDimension: .absolute(100))
+                                              heightDimension: .fractionalWidth(1/3))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 6, bottom: 16, trailing: 6)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.90),
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9),
                                                heightDimension: .estimated(1))
         
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [item])
         
-        
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .groupPagingCentered
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 14, bottom: 16, trailing: 20)
+        section.orthogonalScrollingBehavior = .groupPaging
         return section
     }
     
     func makeGrid(with section: Int) -> NSCollectionLayoutSection {
         //Sizes
-        let fullWidthAndHeightSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+        let fullWidthAndHeightSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                                         heightDimension: .fractionalHeight(1))
 
         let leadingItemSize =  NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4),
-                                               heightDimension: .fractionalHeight(1.0))
+                                               heightDimension: .fractionalHeight(1))
         
         let trailingGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.6),
-                                          heightDimension: .fractionalHeight(1.0))
+                                          heightDimension: .fractionalHeight(1))
 
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                           heightDimension: .fractionalHeight(0.4))
         
         //Items
         let leadingItem = NSCollectionLayoutItem(layoutSize: leadingItemSize)
-        leadingItem.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
+        leadingItem.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 6, bottom: 5, trailing: 6)
         
 
         let trailingItem = NSCollectionLayoutItem( layoutSize: fullWidthAndHeightSize)
-        trailingItem.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
+        trailingItem.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 6, bottom: 5, trailing: 6)
         
         
         //Groups
@@ -171,26 +186,43 @@ private extension CompositionLayoutView {
         let trailingGroup = NSCollectionLayoutGroup.vertical(
             layoutSize: trailingGroupSize,
             subitem: horizontalGroup, count: 2)
-        
+    
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize,
             subitems: [leadingItem, trailingGroup])
+        group.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 12, trailing: 0)
 
         return NSCollectionLayoutSection(group: group)
     }
     
-    func makeHorizontalList() -> NSCollectionLayoutSection {
+    func makeBottomGrid() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                              heightDimension: .absolute(100))
+                                              heightDimension: .fractionalWidth(0.5))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 6, bottom: 16, trailing: 6)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.90),
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4),
                                                heightDimension: .estimated(1))
         
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [item])
         
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuous
+        return section
+    }
+    
+    func makeHorizontalList() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                              heightDimension: .fractionalWidth(1.5/3))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 6, bottom: 16, trailing: 6)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9),
+                                               heightDimension: .estimated(1))
+        
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                       subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
