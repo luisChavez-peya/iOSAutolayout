@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D62C95C289076690048449A /* BackgroundSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D62C95B289076690048449A /* BackgroundSupplementaryView.swift */; };
 		6511D72227F5E53300ED7DDF /* GrillaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6511D72127F5E53300ED7DDF /* GrillaViewController.swift */; };
 		652B191B27D332AA00572E1B /* LeftVsLeadingContraintExampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652B191A27D332AA00572E1B /* LeftVsLeadingContraintExampleView.swift */; };
 		652B191D27D65A5500572E1B /* ViewConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652B191C27D65A5400572E1B /* ViewConstraint.swift */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5D62C95B289076690048449A /* BackgroundSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSupplementaryView.swift; sourceTree = "<group>"; };
 		6511D72127F5E53300ED7DDF /* GrillaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrillaViewController.swift; sourceTree = "<group>"; };
 		652B191A27D332AA00572E1B /* LeftVsLeadingContraintExampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftVsLeadingContraintExampleView.swift; sourceTree = "<group>"; };
 		652B191C27D65A5400572E1B /* ViewConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewConstraint.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 			children = (
 				65603CB828641F3700B76FAA /* CompositionLayoutView.swift */,
 				65B7DDA128660EA900F5561F /* ComponentCellView.swift */,
+				5D62C95B289076690048449A /* BackgroundSupplementaryView.swift */,
 			);
 			path = CompositionLayoutView;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D62C95C289076690048449A /* BackgroundSupplementaryView.swift in Sources */,
 				652D47CD27CF3A4600F32561 /* ContentView.swift in Sources */,
 				65603CB928641F3700B76FAA /* CompositionLayoutView.swift in Sources */,
 				652D47CB27CF3A4600F32561 /* AutolayoutApp.swift in Sources */,

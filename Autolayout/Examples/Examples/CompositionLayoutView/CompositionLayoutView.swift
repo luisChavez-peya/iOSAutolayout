@@ -14,6 +14,7 @@ enum LayoutType: Int, CaseIterable {
     case banner
     case grid
     case bottomGrid
+    case horizontalListWithBackground
     case horizontalList
 }
 
@@ -38,6 +39,7 @@ class CompositionLayoutView: UIView {
                                                      .init(layout: .grid, component: Component.build(number: 5)),
                                                      .init(layout: .bottomGrid, component: Component.build(number: 4)),
                                                      .init(layout: .banner, component: Component.build(number: 10)),
+                                                     .init(layout: .horizontalListWithBackground, component: Component.build(number: 5)),
                                                      .init(layout: .horizontalList, component: Component.build(number: 3)),
                                                      .init(layout: .horizontalList, component: Component.build(number: 4)),
                                                      .init(layout: .horizontalList, component: Component.build(number: 5)),
@@ -49,7 +51,7 @@ class CompositionLayoutView: UIView {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ComponentCellView.identifier,
                 for: indexPath) as? ComponentCellView else { fatalError("Cannot create new cell") }
-            let color = indexPath.row % 2 == 0 ? UIColor.blue : .orange
+            let color = indexPath.row % 2 == 0 ? UIColor.random : UIColor.random
             cell.configure(color: color)
             return cell
         }
@@ -58,6 +60,7 @@ class CompositionLayoutView: UIView {
 
     private lazy var collectionView: UICollectionView = {
         let layout = createLayout()
+        layout.register(BackgroundSupplementaryView.self, forDecorationViewOfKind: "background")
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.register(ComponentCellView.self,
@@ -96,7 +99,7 @@ private extension CompositionLayoutView {
                 return section
             case .banner:
                 let section = self.makeBanner()
-                section.contentInsets.bottom = 16
+                section.contentInsets.bottom = 66
                 section.contentInsets.leading = 20
                 section.contentInsets.trailing = 20
                 return section
@@ -109,6 +112,12 @@ private extension CompositionLayoutView {
                 let section = self.makeBottomGrid()
                 section.contentInsets.bottom = 10
                 section.contentInsets.leading = 20
+                section.contentInsets.trailing = 20
+                return section
+            case .horizontalListWithBackground:
+                let section = self.makeHorizontalListWithBackground()
+                section.contentInsets.bottom = 10
+                section.contentInsets.leading = 36
                 section.contentInsets.trailing = 20
                 return section
             case .horizontalList:
@@ -212,6 +221,27 @@ private extension CompositionLayoutView {
         return section
     }
     
+    func makeHorizontalListWithBackground() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                              heightDimension: .fractionalWidth(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 6, bottom: 16, trailing: 6)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5),
+                                               heightDimension: .fractionalWidth(0.5))
+        
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                       subitems: [item])
+        
+        let backgroundItem = NSCollectionLayoutDecorationItem.background(elementKind: "background")
+        backgroundItem.contentInsets = NSDirectionalEdgeInsets(top: -60, leading: 24, bottom: 10, trailing: 20)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.decorationItems = [backgroundItem]
+        section.orthogonalScrollingBehavior = .continuous
+        return section
+    }
+    
     func makeHorizontalList() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                               heightDimension: .fractionalWidth(1.5/3))
@@ -259,5 +289,16 @@ struct CompositionLayoutView_Previews: PreviewProvider {
         ViewRepresentable<CompositionLayoutView>(view: CompositionLayoutView())
             .ignoresSafeArea()
             .previewDisplayName("CompositionLayoutView")
+    }
+}
+
+extension UIColor {
+    static var random: UIColor {
+        return UIColor(
+            hue: .random(in: 0...1),
+            saturation: 0.4,
+            brightness: 0.9,
+            alpha: 1
+        )
     }
 }
